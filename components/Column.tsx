@@ -53,6 +53,7 @@ function Column({ id, todos, index }: Props) {
                             .includes(searchString.toLowerCase())
                         ).length}
                   </span>
+                  
 								</h2>
 
 							<div className="space-y-2">
