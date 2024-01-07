@@ -4,6 +4,7 @@ import { PlusCircleIcon } from "@heroicons/react/24/solid";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import TodoCard from "./TodoCard";
 import { useBoardStore } from "@/store/BoardStore";
+import { useModalStore } from "@/store/ModalStore";
 
 type Props = {
 	id: TypedColumn;
@@ -18,6 +19,7 @@ const idToColumnText: { [key in TypedColumn]: string } = {
 };
 function Column({ id, todos, index }: Props) {
 	const [searchString] = useBoardStore((state) => [state.searchString]);
+	const openModal = useModalStore((state) => state.openModal);
 	return (
 		<Draggable
 			draggableId={id}
@@ -44,67 +46,69 @@ function Column({ id, todos, index }: Props) {
 								<h2 className="flex justify-between font-bold text-xl p-2">
 									{idToColumnText[id]}
 
-									     <span className="text-gray-500 bg-gray-200 rounded-full font-normal px-2 py-1 text-sm">
-                    {!searchString
-                      ? todos.length
-                      : todos.filter((todo) =>
-                          todo.title
-                            .toLowerCase()
-                            .includes(searchString.toLowerCase())
-                        ).length}
-                  </span>
-                  
+									<span className="text-gray-500 bg-gray-200 rounded-full font-normal px-2 py-1 text-sm">
+										{!searchString
+											? todos.length
+											: todos.filter((todo) =>
+													todo.title
+														.toLowerCase()
+														.includes(searchString.toLowerCase())
+											  ).length}
+									</span>
 								</h2>
 
-							<div className="space-y-2">
-                  {/* conditionally check if there is searchstring, if so filter and map through todos else just map */}
-                  {todos.map((todo, index) => {
-                    if (
-                      searchString &&
-                      !todo.title
-                        .toLowerCase()
-                        .includes(searchString.toLocaleLowerCase())
-                    ) {
-                      return null; // Skip rendering this todo
-                    }
+								<div className="space-y-2">
+									{/* conditionally check if there is searchstring, if so filter and map through todos else just map */}
+									{todos.map((todo, index) => {
+										if (
+											searchString &&
+											!todo.title
+												.toLowerCase()
+												.includes(searchString.toLocaleLowerCase())
+										) {
+											return null; // Skip rendering this todo
+										}
 
-                    return (
-                      <Draggable
-                        key={todo.$id}
-                        draggableId={todo.$id}
-                        index={index}
-                      >
-                        {(provided) => (
-                          <TodoCard
-                            todo={todo}
-                            index={index}
-                            id={id}
-                            innerRef={provided.innerRef}
-                            draggableProps={provided.draggableProps}
-                            dragHandleProps={provided.dragHandleProps}
-                          />
-                        )}
-                      </Draggable>
-                    );
-                  })}
-                  {provided.placeholder}
+										return (
+											<Draggable
+												key={todo.$id}
+												draggableId={todo.$id}
+												index={index}
+											>
+												{(provided) => (
+													<TodoCard
+														todo={todo}
+														index={index}
+														id={id}
+														innerRef={provided.innerRef}
+														draggableProps={provided.draggableProps}
+														dragHandleProps={provided.dragHandleProps}
+													/>
+												)}
+											</Draggable>
+										);
+									})}
+									{provided.placeholder}
 
-                  <div className="flex items-end justify-end p-2">
-                    <button
-                      // onClick={handleAddTodo}
-                      className="text-green-500 hover:text-green-600"
-                    >
-                      <PlusCircleIcon className="h-10 w-10" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-          </Droppable>
-        </div>
-      )}
-    </Draggable>
-  );
+									<div className="flex items-end justify-end p-2">
+										<button
+											// onClick={handleAddTodo}
+											className="text-green-500 hover:text-green-600"
+										>
+											<PlusCircleIcon
+												onClick={openModal}
+												className="h-10 w-10"
+											/>
+										</button>
+									</div>
+								</div>
+							</div>
+						)}
+					</Droppable>
+				</div>
+			)}
+		</Draggable>
+	);
 }
 
 export default Column;
