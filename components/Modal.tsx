@@ -2,14 +2,8 @@
 import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useModalStore } from "@/store/ModalStore";
-import { useBoardStore } from "@/store/BoardStore";
 
 function Modal() {
-	const [newTaskInput, setNewTaskInput] = useBoardStore((state) => [
-		state.newTaskInput,
-		state.setNewTaskInput,
-	]);
-
 	const [isOpen, closeModal] = useModalStore((state) => [
 		state.isOpen,
 		state.closeModal,
@@ -57,18 +51,6 @@ function Modal() {
 								>
 									Add a Task
 								</Dialog.Title>
-
-								<div className="mt-2">
-									<input
-										type="text"
-										value={newTaskInput}
-										onChange={(e) => setNewTaskInput(e.target.value)}
-										placeholder="Enter a task here..."
-										className="w-full border bg-gray-300 rounded-md outline-none p-5"
-									/>
-								</div>
-
-								{/* Radio Group */}
 							</Dialog.Panel>
 						</Transition.Child>
 					</div>
